@@ -37,7 +37,7 @@ tabPanel("Description of SVM",
              numericInput(inputId='degree1', label='degree',value=3,min=0),
              numericInput(inputId='coef01', label='b',value=0,min=0),
              sliderInput(inputId='c1', label='C',min=1,max=100,value=50,step=1),
-             actionButton("submit1" ,"submit", icon("refresh"))
+             actionButton("submit1" ,"submit")
            ),
            mainPanel(
             plotOutput('plot1'),
