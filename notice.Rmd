@@ -1,19 +1,41 @@
 ---
 title: "notice"
-author: "ROBLIN Caroline"
-date: "8 septembre 2019"
+author: "ROBLIN Caroline, TELLIER Kevin, YE Maxime"
+date: '`r format(Sys.time(), "%d %B %Y")`'
 output: html_document
+
+toc: yes
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+#Notice
+### Data presentation
 
-## R Markdown
+The goal is to present the data by 
 
-This is an R Markdown document. Markdown is a simple fomatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+* dimension
+* name of variables
+* and some statistics.
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+###Description of SVM
+
+you can select your choice into the type of kernel :
+
+* _linear_
+* _polynomial_
+* _radial basis_
+* _sigmoid_
+
+and after choosing parameters which you need, you have to push the button submit to display the results
+
+###SVM
+###comparison
+
+
+
+
 
 ```{r cars}
 summary(cars)

@@ -51,29 +51,46 @@ shinyServer(function(input, output) {
   x[y == 1,] = x[y == 1,] + 1
   plot(x, col = y + 3, pch = 19)
   dat = data.frame(x, y = as.factor(y))
-  svmfit = svm(y ~ ., data = dat, kernel = "linear", cost = 10, scale = FALSE) 
   output$plot1 <- renderPlot({
     input$submit1
       if (input$kernel1=='linear'){
-        svmfit = svm(y ~ ., data = dat, kernel = "linear", cost = 10, scale = FALSE) 
+        svmfit = svm(y ~ ., data = dat, kernel = "linear", cost = isolate(input$c1), scale = FALSE) 
         plot(svmfit, dat)
         }
     if (input$kernel1=='polynomial'){
-      svmfit = svm(y ~ ., data = dat, kernel = "polynomial", degree=input$degree1, coef0=input$coef01, cost = input$c1, scale = FALSE) 
+      svmfit = svm(y ~ ., data = dat, kernel = "polynomial", degree=isolate(input$degree1), coef0=isolate(input$coef01), cost = isolate(input$c1), scale = FALSE) 
       plot(svmfit, dat)
 }
     if (input$kernel1=='radial basis'){
-      svmfit = svm(y ~ ., data = dat, kernel = "radial basis", cost = 10, scale = FALSE) 
+      svmfit = svm(y ~ ., data = dat, kernel = "radial", cost = isolate(input$c1), scale = FALSE) 
       plot(svmfit, dat)
     }
     if (input$kernel1=='sigmoid'){
-      svmfit = svm(y ~ ., data = dat, kernel = "sigmoid",coef0=input$coef01, cost = input$c1, scale = FALSE) 
+      svmfit = svm(y ~ ., data = dat, kernel = "sigmoid",coef0=isolate(input$coef01), cost = isolate(input$c1), scale = FALSE) 
       plot(svmfit, dat)
     }
   })
    output$explication1 <- renderText({
-    'We can observe that the SVM create a line who separate data in two parts'
+    'We can observe that the SVM create a line who separate data in two parts, and the number of support vector is for each side of the line :'
+     
   })
+   output$sv1 <- renderText({
+     input$submit1
+     if (input$kernel1=='linear'){
+       svmfit = svm(y ~ ., data = dat, kernel = "linear", cost = isolate(input$c1), scale = FALSE) 
+     }
+     if (input$kernel1=='polynomial'){
+       svmfit = svm(y ~ ., data = dat, kernel = "polynomial", degree=isolate(input$degree1), coef0=isolate(input$coef01), cost = isolate(input$c1), scale = FALSE) 
+     }
+     if (input$kernel1=='radial basis'){
+       svmfit = svm(y ~ ., data = dat, kernel = "radial", cost = isolate(input$c1), scale = FALSE) 
+     }
+     if (input$kernel1=='sigmoid'){
+       svmfit = svm(y ~ ., data = dat, kernel = "sigmoid",coef0=isolate(input$coef01), cost = isolate(input$c1), scale = FALSE) 
+     }
+   svmfit$nSV
+   })
+   svmfit = svm(y ~ ., data = dat, kernel = "linear", cost = isolate(input$c1), scale = FALSE) 
   make.grid = function(x, n = 75) {
     grange = apply(x, 2, range)
     x1 = seq(from = grange[1,1], to = grange[2,1], length = n)
@@ -107,14 +124,17 @@ shinyServer(function(input, output) {
   
   
   
-  output$dim <- renderDataTable({
+  output$dim <- renderTable({
     dim(data)
     })
-  output$name <- renderDataTable({
+  output$name <- renderTable({
     names(data)
     })
   output$sum <- renderDataTable({
     summary(data)
+  })
+  output$repartition <- renderText({
+    'We have divided the sample in 2 parts : the train sample with observations when Time is inferior at 150000, and the test sample with the others'
   })
 #  output$tablesvm <- renderDataTable({
  #   table(svm.pred$class,Class.150000)

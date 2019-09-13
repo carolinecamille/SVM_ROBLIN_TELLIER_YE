@@ -23,9 +23,10 @@ shinyUI(fluidPage(navbarPage(title="SUPPORT VECTOR MACHINE",
     
     # Show a plot of the generated distribution
     mainPanel(
-      dataTableOutput("dim"),
-      dataTableOutput("name"),
-      dataTableOutput("sum")
+      tableOutput("dim"),
+      tableOutput("name"),
+      dataTableOutput("sum"),
+      textOutput('repartition')
       
     )
   )
@@ -42,6 +43,7 @@ tabPanel("Description of SVM",
            mainPanel(
             plotOutput('plot1'),
             textOutput('explication1'),
+            textOutput('sv1'),
             plotOutput('plot2'),
             textOutput('explication2')
            )
