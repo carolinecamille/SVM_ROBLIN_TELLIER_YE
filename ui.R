@@ -18,11 +18,12 @@ shinyUI(fluidPage(navbarPage(title="SUPPORT VECTOR MACHINE",
   # Sidebar with a slider input for number of bins 
   sidebarLayout(
     sidebarPanel(
-      actionButton(inputId="click",label="NOTICE")
+      actionButton(inputId="click",label="MANUAL",helpText='Please open the manual to understand how the application works')
     ),
     
     # Show a plot of the generated distribution
     mainPanel(
+      textOutput('presentation'),
       tableOutput("dim"),
       tableOutput("name"),
       dataTableOutput("sum"),

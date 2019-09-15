@@ -11,7 +11,7 @@ library(shiny)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
-  observeEvent(input$click,{file.show("C:/Users/Caroline/Documents/M2/SVM/projet/notice.html")})
+  observeEvent(input$click,{file.show("C:/Users/Caroline/Documents/M2/SVM/projet/projet_final/notice.html")})
   data=read.csv("C:/Users/Caroline/Documents/M2/SVM/projet/creditcard.csv",header=T,sep=",")
   attach(data)
   train=(Time<150000)
@@ -21,29 +21,47 @@ shinyServer(function(input, output) {
   glm.probs=predict(glm.fit,type='response',data.150000)
   glm.pred=rep(0,45614)
   glm.pred[glm.probs>.5]=1
- 
   library(MASS)
   lda.fit=lda(Class~V4+V10+V14,data=data.150000,subset = train)
   lda.pred=predict(lda.fit, data[!train,])
   qda.fit=qda(Class~V4+V10+V14,data=data.150000,subset=train)
   qda.pred=predict(qda.fit,data[!train,],type='vector')
-  library(e1071)
-  #svm.fit=svm(Class~.,data=data,subset=train,type=NULL,kernel=input$kernel,degree=input$degree,coef0=input$coef0,cost=input$c)
-  #svm.pred=predict(svm.fit, data[!train,])
-  #output$tablesvm <-renderDataTable({mean(glm.pred==Class.150000)*100})
-  output$text1 <- renderText({input$submit
-                            'the percent of good prediction is : '
-                            })
-  output$predsvm <- renderText({ input$submit
-                                 ex.svm=isolate(0.5)
-                                  ex.svm})
-  #mean(svm.pred==Class.150000)*100
-  ex.svm=99.9
-
   
   
   
   
+  
+  
+  
+  #p1
+  
+  output$presentation <- renderText({
+    'The dataset presents transactions that occured in two days made by credit cards in September 2013 by european cardholders.
+    We have first the number of observation, and after the number of variables. Then the names of variables and Statisitics of the dataset by variables. '
+  })
+  output$dim <- renderTable({
+    dim(data)
+  })
+  output$name <- renderTable({
+    names(data)
+  })
+  output$sum <- renderDataTable({
+    summary(data)
+  })
+  output$repartition <- renderText({
+    'We have divided the sample in 2 parts : the train sample with observations when Time is inferior at 150000, and the test sample with the others.'
+  })
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  #p2
   
   set.seed(10111)
   x = matrix(rnorm(40), 20, 2)
@@ -53,14 +71,14 @@ shinyServer(function(input, output) {
   dat = data.frame(x, y = as.factor(y))
   output$plot1 <- renderPlot({
     input$submit1
-      if (input$kernel1=='linear'){
-        svmfit = svm(y ~ ., data = dat, kernel = "linear", cost = isolate(input$c1), scale = FALSE) 
-        plot(svmfit, dat)
-        }
+    if (input$kernel1=='linear'){
+      svmfit = svm(y ~ ., data = dat, kernel = "linear", cost = isolate(input$c1), scale = FALSE) 
+      plot(svmfit, dat)
+    }
     if (input$kernel1=='polynomial'){
       svmfit = svm(y ~ ., data = dat, kernel = "polynomial", degree=isolate(input$degree1), coef0=isolate(input$coef01), cost = isolate(input$c1), scale = FALSE) 
       plot(svmfit, dat)
-}
+    }
     if (input$kernel1=='radial basis'){
       svmfit = svm(y ~ ., data = dat, kernel = "radial", cost = isolate(input$c1), scale = FALSE) 
       plot(svmfit, dat)
@@ -70,27 +88,27 @@ shinyServer(function(input, output) {
       plot(svmfit, dat)
     }
   })
-   output$explication1 <- renderText({
-    'We can observe that the SVM create a line who separate data in two parts, and the number of support vector is for each side of the line :'
-     
+  output$explication1 <- renderText({
+    'We can observe that the SVM create a line who separate data in two parts, we have above points where realisations are 1 and below realisations wich are -1. And the number of support vector is for each side of the line :'
+    
   })
-   output$sv1 <- renderText({
-     input$submit1
-     if (input$kernel1=='linear'){
-       svmfit = svm(y ~ ., data = dat, kernel = "linear", cost = isolate(input$c1), scale = FALSE) 
-     }
-     if (input$kernel1=='polynomial'){
-       svmfit = svm(y ~ ., data = dat, kernel = "polynomial", degree=isolate(input$degree1), coef0=isolate(input$coef01), cost = isolate(input$c1), scale = FALSE) 
-     }
-     if (input$kernel1=='radial basis'){
-       svmfit = svm(y ~ ., data = dat, kernel = "radial", cost = isolate(input$c1), scale = FALSE) 
-     }
-     if (input$kernel1=='sigmoid'){
-       svmfit = svm(y ~ ., data = dat, kernel = "sigmoid",coef0=isolate(input$coef01), cost = isolate(input$c1), scale = FALSE) 
-     }
-   svmfit$nSV
-   })
-   svmfit = svm(y ~ ., data = dat, kernel = "linear", cost = isolate(input$c1), scale = FALSE) 
+  output$sv1 <- renderText({
+    input$submit1
+    if (input$kernel1=='linear'){
+      svmfit = svm(y ~ ., data = dat, kernel = "linear", cost = isolate(input$c1), scale = FALSE) 
+    }
+    if (input$kernel1=='polynomial'){
+      svmfit = svm(y ~ ., data = dat, kernel = "polynomial", degree=isolate(input$degree1), coef0=isolate(input$coef01), cost = isolate(input$c1), scale = FALSE) 
+    }
+    if (input$kernel1=='radial basis'){
+      svmfit = svm(y ~ ., data = dat, kernel = "radial", cost = isolate(input$c1), scale = FALSE) 
+    }
+    if (input$kernel1=='sigmoid'){
+      svmfit = svm(y ~ ., data = dat, kernel = "sigmoid",coef0=isolate(input$coef01), cost = isolate(input$c1), scale = FALSE) 
+    }
+    svmfit$nSV
+  })
+  svmfit = svm(y ~ ., data = dat, kernel = "linear", cost = isolate(input$c1), scale = FALSE) 
   make.grid = function(x, n = 75) {
     grange = apply(x, 2, range)
     x1 = seq(from = grange[1,1], to = grange[2,1], length = n)
@@ -106,17 +124,15 @@ shinyServer(function(input, output) {
   beta = drop(t(svmfit$coefs)%*%x[svmfit$index,])
   beta0 = svmfit$rho
   
- 
-  
   output$plot2 <- renderPlot({
     input$submit1
     if (input$kernel1=='linear'){
-    plot(xgrid, col = c("red", "blue")[as.numeric(ygrid)], pch = 20, cex = .2)
-    points(x, col = y + 3, pch = 19)
-    points(x[svmfit$index,], pch = 5, cex = 2)
-    abline(beta0 / beta[2], -beta[1] / beta[2])
-    abline((beta0 - 1) / beta[2], -beta[1] / beta[2], lty = 2)
-    abline((beta0 + 1) / beta[2], -beta[1] / beta[2], lty = 2)
+      plot(xgrid, col = c("red", "blue")[as.numeric(ygrid)], pch = 20, cex = .2)
+      points(x, col = y + 3, pch = 19)
+      points(x[svmfit$index,], pch = 5, cex = 2)
+      abline(beta0 / beta[2], -beta[1] / beta[2])
+      abline((beta0 - 1) / beta[2], -beta[1] / beta[2], lty = 2)
+      abline((beta0 + 1) / beta[2], -beta[1] / beta[2], lty = 2)
     }
   })
   
@@ -124,27 +140,41 @@ shinyServer(function(input, output) {
   
   
   
-  output$dim <- renderTable({
-    dim(data)
-    })
-  output$name <- renderTable({
-    names(data)
-    })
-  output$sum <- renderDataTable({
-    summary(data)
+  
+  
+  #p3
+  
+  library(e1071)
+  #svm.fit=svm(Class~.,data=data,subset=train,type=NULL,kernel=input$kernel,degree=input$degree,coef0=input$coef0,cost=input$c)
+  #svm.pred=predict(svm.fit, data[!train,])
+  #output$tablesvm <-renderDataTable({mean(glm.pred==Class.150000)*100})
+  output$text1 <- renderText({input$submit
+    'the percent of good prediction is : '
   })
-  output$repartition <- renderText({
-    'We have divided the sample in 2 parts : the train sample with observations when Time is inferior at 150000, and the test sample with the others'
-  })
-#  output$tablesvm <- renderDataTable({
- #   table(svm.pred$class,Class.150000)
+  output$predsvm <- renderText({ input$submit
+    ex.svm=isolate(0.5)
+    ex.svm})
+  #mean(svm.pred==Class.150000)*100
+  ex.svm=99.9
+  #  output$tablesvm <- renderDataTable({
+  #   table(svm.pred$class,Class.150000)
   #})
-#  output$predsvm <- renderText({
+  #  output$predsvm <- renderText({
   #ex.svm=mean(svm.pred$class==Class.150000)*100
   #  ex.svm
   #})
   
-
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  #p4
+  
   output$table <- renderDataTable({
     if (input$Model=='logistic regression'){table=table(glm.pred,Class.150000)}
     if (input$Model=='linear discriminant analysis'){table=table(lda.pred$class,Class.150000)}
@@ -156,21 +186,21 @@ shinyServer(function(input, output) {
       ex=mean(glm.pred==Class.150000)*100
       decision=ifelse(ex>ex.svm,"Selected model prefered","SVM prefered")
       output$conclusion <- renderText({decision})
-      }
+    }
     if (input$Model=='linear discriminant analysis'){ex=mean(
       lda.pred$class==Class.150000)*100
-      decision=ifelse(ex>ex.svm,"Selected model prefered","SVM prefered")
-      output$conclusion <- renderText({decision})
-      }
+    decision=ifelse(ex>ex.svm,"Selected model prefered","SVM prefered")
+    output$conclusion <- renderText({decision})
+    }
     if (input$Model=='quadratic discriminant analysis'){
       ex=mean(qda.pred$class==Class.150000)*100
       decision=ifelse(ex>ex.svm,"Selected model prefered","SVM prefered")
       output$conclusion <- renderText({decision})
-      }
+    }
     ex})
-
-
-
-
-    
-})
+  
+  
+  
+  
+  
+  })
